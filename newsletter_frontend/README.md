@@ -1,82 +1,64 @@
-# Lightweight React Template for KAVIA
+# Newsletter Admin Frontend
 
-This project provides a minimal React template with a clean, modern UI and minimal dependencies.
+A lightweight React admin dashboard for a daily automated newsletter. It provides:
+- Dashboard with key stats (sent, opens, clicks), latest run status, and vertical breakdown
+- Run Logs with filtering by date and pagination
+- Archive browsing with search and vertical filters
+- Newsletter viewer rendering HTML/Markdown/JSON output
+- Optional metadata editor to lay groundwork for future story review/editor features
 
-## Features
+No heavy UI frameworks; pure React and CSS for fast loads.
 
-- **Lightweight**: No heavy UI frameworks - uses only vanilla CSS and React
-- **Modern UI**: Clean, responsive design with KAVIA brand styling
-- **Fast**: Minimal dependencies for quick loading times
-- **Simple**: Easy to understand and modify
+## Quick Start
 
-## Getting Started
+1. Install dependencies
+   - npm install
 
-In the project directory, you can run:
+2. Configure API base URL
+   - Create a .env file in newsletter_frontend root (sibling to package.json) and set:
+     REACT_APP_API_BASE_URL=https://your-backend-host
+   - This URL must expose:
+     - GET /api/stats
+     - GET /api/logs?page=&pageSize=&date=
+     - GET /api/archive?page=&pageSize=&vertical=&q=
+     - GET /api/newsletters/:id
+     - POST /api/newsletters/:id/meta  (optional for metadata)
 
-### `npm start`
+3. Run the app
+   - npm start
 
-Runs the app in development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Open http://localhost:3000
 
-### `npm test`
+## Routes
 
-Launches the test runner in interactive watch mode.
+- #/           Dashboard
+- #/logs       Run logs list
+- #/archive    Archive browser
+- #/newsletter/:id  Newsletter viewer
 
-### `npm run build`
+Hash-based routing is used to avoid adding extra dependencies.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## Environment Variables
 
-## Customization
+Create .env with the following:
+- REACT_APP_API_BASE_URL=...  (required) Base URL for REST API
 
-### Colors
+Do not commit secrets; use your deployment environment to provide values.
 
-The main brand colors are defined as CSS variables in `src/App.css`:
+## Project Structure
 
-```css
-:root {
-  --kavia-orange: #E87A41;
-  --kavia-dark: #1A1A1A;
-  --text-color: #ffffff;
-  --text-secondary: rgba(255, 255, 255, 0.7);
-  --border-color: rgba(255, 255, 255, 0.1);
-}
-```
+- src/services/api.js         REST API client with typed methods
+- src/pages/                  Pages (Dashboard, Logs, Archive, NewsletterView)
+- src/components/Layout/      Layout and shared UI styles
+- src/utils/                  Small helpers (formatting, debounce)
+- src/App.js                  Entry point and simple hash router
 
-### Components
+## Extending to Story Review/Editor
 
-This template uses pure HTML/CSS components instead of a UI framework. You can find component styles in `src/App.css`. 
+- The NewsletterView includes a JSON metadata editor and save endpoint as a foundation.
+- You can add dedicated components under src/pages/editor or src/components/editor and connect to new endpoints (e.g., /api/stories, /api/drafts).
+- Prefer keeping business logic inside src/services and UI in pages/components.
 
-Common components include:
-- Buttons (`.btn`, `.btn-large`)
-- Container (`.container`)
-- Navigation (`.navbar`)
-- Typography (`.title`, `.subtitle`, `.description`)
+## Testing
 
-## Learn More
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The default CRA test setup is included. Consider adding tests for components and API mocks as the app grows.
